@@ -1,13 +1,13 @@
 "use client";
-export const dynamic = 'force-dynamic';
-import { useState } from "react";
+
+import { useState, Suspense } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { hitungBMI } from "@/lib/bmi";
 
-export default function Page() {
+function BmiContent() {
   const params = useParams();
-  const nama = decodeURIComponent(params.namalengkap).replaceAll("-", " ");
+  const nama = params?.namalengkap ? decodeURIComponent(params.namalengkap).replaceAll("-", " ") : "";
 
   const [berat, setBerat] = useState("");
   const [tinggi, setTinggi] = useState("");
@@ -79,5 +79,13 @@ export default function Page() {
         </p>
       )}
     </main>
+  );
+}
+
+export default function Page() {
+  return (
+    <Suspense fallback={<div style={{ textAlign: "center", marginTop: 40 }}>Memuat...</div>}>
+      <BmiContent />
+    </Suspense>
   );
 }
